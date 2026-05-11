@@ -1,9 +1,16 @@
-name: CI
+name: perf-test
 on: [push]
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Run test
-      run: echo "running tests..." && sleep 1
+      - uses: actions/checkout@v4
+      - name: Print trigger
+        run: cat trigger.txt || echo "no trigger"
+      - name: Show time
+        run: date
+      - name: Basic go test
+        run: |
+          if [ -f go.mod ]; then go version; go mod tidy; go test ./... || true; fi
+      - name: Sleep a bit to simulate work
+        run: sleep 2
